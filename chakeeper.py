@@ -36,22 +36,10 @@ class ChatRoom:
                 if sender != self.username:
                     print(message)
 
-            # Atualizar o último id de mensagem visto
-            last_message_seen = children[-1] if children else ""
-
-
     def send_message(self, message):
         timestamp = time.strftime("%H:%M:%S")
         self.zk.ensure_path("/chat/messages")
         self.zk.create("/chat/messages/message-", f"[{timestamp}] {self.username}: {message}".encode('utf-8'), sequence=True, ephemeral=True)
-
-    def list_recent_messages(self):
-        print("Mensagens recentes:")
-        if self.messages:
-            for message in self.messages:
-                print(message)
-        else:
-            print("Nenhuma mensagem recente.")
 
     def list_connected_users(self):
         print("Usuários conectados:")
