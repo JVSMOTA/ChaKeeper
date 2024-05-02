@@ -8,25 +8,19 @@ import threading
 
 class ChatRoom:
     def __init__(self, username):
-            self.username = username
-            self.messages = set()  # Usando um conjunto para evitar mensagens duplicadas
-            self.zk = KazooClient(hosts='localhost:2181')
-            self.zk.start()
+        self.username = username
+        self.zk = KazooClient(hosts='localhost:2181')
+        self.zk.start()
 
     def receive_messages(self):
-        last_message_seen = ""
-
         @self.zk.ChildrenWatch("/chat/messages")
         def watch_messages(children):
             os.system('clear')
-            nonlocal last_message_seen
-
             messages = []
             for child in children:
-                if child > last_message_seen:
-                    message_path = f"/chat/messages/{child}"
-                    data, _ = self.zk.get(message_path)
-                    messages.append(data.decode("utf-8"))
+                message_path = f"/chat/messages/{child}"
+                data, _ = self.zk.get(message_path)
+                messages.append(data.decode("utf-8"))
 
             # Ordenar as mensagens por timestamp antes de exibi-las
             messages.sort()
@@ -38,8 +32,10 @@ class ChatRoom:
 
     def send_message(self, message):
         timestamp = time.strftime("%H:%M:%S")
-        self.zk.ensure_path("/chat/messages")
-        self.zk.create("/chat/messages/message-", f"[{timestamp}] {self.username}: {message}".encode('utf-8'), sequence=True, ephemeral=True)
+        message_data = f"[{timestamp}] {self.username}: {message}".encode('utf-8')
+        
+        # Armazenar a mensagem no ZooKeeper com um ttl
+        self.zk.create("/chat/messages/message-", message_data, ephemeral=True, sequence=True)
 
     def list_connected_users(self):
         print("Usuários conectados:")
@@ -52,7 +48,6 @@ class ChatRoom:
         try:
             while True:
                 user_input = input("")
-                # os.system('clear')
                 if user_input == "\\u":    # Listar Usuários conectados
                     self.list_connected_users()
                 else:                      # Enviar a mensagem para o servidor
