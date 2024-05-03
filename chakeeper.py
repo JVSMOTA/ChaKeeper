@@ -33,6 +33,9 @@ class ChatRoom:
     def send_message(self, message):
         timestamp = time.strftime("%H:%M:%S")
         message_data = f"[{timestamp}] {self.username}: {message}".encode('utf-8')
+
+        # Garantir que o nó /chat/messages exista
+        self.zk.ensure_path("/chat/messages")
         
         # Armazenar a mensagem no ZooKeeper com um ttl
         self.zk.create("/chat/messages/message-", message_data, ephemeral=True, sequence=True)
