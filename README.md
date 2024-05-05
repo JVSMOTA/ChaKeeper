@@ -17,7 +17,7 @@ O objetivo do ChaKeeper é fornecer uma plataforma de chat que possa ser facilme
 ## 🚀 Como iniciar o ChaKeeper na sua máquina
 1. Clone este repositório para o seu ambiente local:
     ```
-    git clone https://github.com/seu-usuario/chakeeper.git
+    git clone https://github.com/JVSMOTA/ChaKeeper.git
     ```
 
 2. Instale as dependências do Python:
