@@ -1,5 +1,11 @@
 # ChaKeeper
 
+<div align="right">
+  
+[![HitCount](https://hits.dwyl.com/JVSMOTA/ChaKeeper.svg?style=flat-square)](http://hits.dwyl.com/JVSMOTA/ChaKeeper)
+
+</div>
+
 ## 📝 Descrição
 ChaKeeper é um simples sistema de chat distribuído usando o ZooKeeper como mecanismo de mensagens e controle de usuários.
 
